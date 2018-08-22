@@ -2,8 +2,11 @@ import os
 from flask import Flask
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
-from flask import request
+from flask import request, send_file
 from flask import jsonify
+from PIL import Image
+import qrcode
+from io import StringIO, BytesIO
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -28,15 +31,19 @@ def add_data():
             )
             db.session.add(location)
             db.session.commit()
-            message="Saving Success id:"+str(location.id)
-            return message
+            # message="Saving Success id:"+str(location.id)
+            # return message
+            qr_link="https://beacon-data-pro.herokuapp.com/get/"+str(location.id)
+            pil_img=qrcode.make(qr_link)
+            img_io = BytesIO()
+            pil_img.save(img_io, 'JPEG', quality=70)
+            img_io.seek(0)
+            return send_file(img_io, mimetype='image/jpeg')
         except:
             return "Operation Fail"
     return render_template("getdata.html")  
 
-
-
-@app.route('/getData/<id_>')
+@app.route('/get/<id_>')
 def get_data(id_):
     location = Location.query.filter_by(id=id_).first()
     return jsonify({"id":location.id,"place":location.place,"beacon1":location.beacon1,"beacon2":location.beacon2,"beacon3":location.beacon3})
