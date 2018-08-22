@@ -22,12 +22,25 @@ def add_data():
         beacon1=request.form.get('beacon1')
         beacon2=request.form.get('beacon2')
         beacon3=request.form.get('beacon3')
+        beacon1x=request.form.get('beacon1x')
+        beacon1y=request.form.get('beacon1y')
+        beacon2x=request.form.get('beacon2x')
+        beacon2y=request.form.get('beacon2y')
+        beacon3x=request.form.get('beacon3x')
+        beacon3y=request.form.get('beacon3y')
+
         try:
             location=Location(
-                place=place,
-                beacon1=beacon1,
-                beacon2=beacon2,
-                beacon3=beacon3
+                place = place,
+                beacon1 = beacon1,
+                beacon1x = beacon1x,
+                beacon1y = beacon1y,
+                beacon2 = beacon2,
+                beacon2x = beacon2x,
+                beacon2y = beacon2y,
+                beacon3 = beacon3,
+                beacon3x = beacon3x,
+                beacon3y = beacon3y
             )
             db.session.add(location)
             db.session.commit()
@@ -42,6 +55,7 @@ def add_data():
         except:
             return "Operation Fail"
     return render_template("getdata.html")  
+
 
 @app.route('/get/<id_>')
 def get_data(id_):
