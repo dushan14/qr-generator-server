@@ -46,7 +46,11 @@ def add_data():
 @app.route('/get/<id_>')
 def get_data(id_):
     location = Location.query.filter_by(id=id_).first()
-    return jsonify({"id":location.id,"place":location.place,"beacon1":location.beacon1,"beacon2":location.beacon2,"beacon3":location.beacon3})
+    data={"id":location.id,"place":location.place,
+    "beacon1":{"uuid":location.beacon1,"x":location.beacon1x,"y":location.beacon1y},
+    "beacon2":{"uuid":location.beacon2,"x":location.beacon2x,"y":location.beacon2y},
+    "beacon3":{"uuid":location.beacon3,"x":location.beacon3x,"y":location.beacon3y}}
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run()
