@@ -12,6 +12,8 @@ app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+root_link="https://beacon-data-pro.herokuapp.com/"
+get_data_link=root_link+"/get/"
 
 from models import Location
 
@@ -44,14 +46,7 @@ def add_data():
             )
             db.session.add(location)
             db.session.commit()
-            # message="Saving Success id:"+str(location.id)
-            # return message
-            qr_link="https://beacon-data-pro.herokuapp.com/get/"+str(location.id)
-            pil_img=qrcode.make(qr_link)
-            img_io = BytesIO()
-            pil_img.save(img_io, 'JPEG', quality=70)
-            img_io.seek(0)
-            return send_file(img_io, mimetype='image/jpeg')
+            return getqr(location.id)
         except:
             return "Operation Fail"
     return render_template("getdata.html")  
@@ -68,7 +63,7 @@ def get_data(id_):
 
 @app.route('/getqr/<id>')
 def getqr(id):
-    qr_link="https://beacon-data-pro.herokuapp.com/get/"+str(id)
+    qr_link=get_data_link+str(id)
     pil_img=qrcode.make(qr_link)
     img_io = BytesIO()
     pil_img.save(img_io, 'JPEG', quality=70)
