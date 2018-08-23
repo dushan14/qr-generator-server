@@ -66,6 +66,15 @@ def get_data(id_):
     "beacon3":{"uuid":location.beacon3,"x":location.beacon3x,"y":location.beacon3y}}
     return jsonify(data)
 
+@app.route('/getqr/<id>')
+def getqr(id):
+    qr_link="https://beacon-data-pro.herokuapp.com/get/"+str(id)
+    pil_img=qrcode.make(qr_link)
+    img_io = BytesIO()
+    pil_img.save(img_io, 'JPEG', quality=70)
+    img_io.seek(0)
+    return send_file(img_io, mimetype='image/jpeg')
+
 if __name__ == '__main__':
     app.run()
    
