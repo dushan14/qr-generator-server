@@ -12,6 +12,7 @@ app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
 root_link="https://beacon-data-pro.herokuapp.com/"
 get_data_link=root_link+"/get/"
 
